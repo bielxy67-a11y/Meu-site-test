@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biel - FF Scanner Premium</title>
+    <style>
+        :root {
+            --neon-red: #ff0000;
+            --glass-bg: rgba(15, 15, 15, 0.85);
+        }
+
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid var(--neon-red);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.15);
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-red);
+            text-shadow: 0 0 10px var(--neon-red);
+        }
+
+        /* Botão Verde */
+        #verify-btn {
+            background-color: #00ff44;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 68, 0.4);
+        }
+
+        #verify-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(0, 255, 68, 0.6);
+        }
+
+        /* Barra de Carregamento */
+        .progress-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #222;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #444;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: var(--neon-red);
+            box-shadow: 0 0 10px var(--neon-red);
+            transition: width 0.1s;
+        }
+
+        #status-text {
+            margin-top: 15px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        /* Resultado */
+        #result {
+            margin-top: 25px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .clean { color: #00ff44; }
+        .danger { color: #ff0000; text-shadow: 0 0 5px #ff0000; }
+        
+        .path-log {
+            font-size: 12px;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 1px dashed #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Biel Scanner</h1>
+        
+        <button id="verify-btn" onclick="startScan()">VERIFICAR DISPOSITIVO</button>
+
+        <div class="progress-container" id="scanner-ui">
+            <div class="progress-bar">
+                <div class="progress-fill" id="fill"></div>
+            </div>
+            <p id="status-text">Iniciando análise de diretórios...</p>
+        </div>
+
+        <div id="result">
+            <p id="result-msg"></p>
+            <div id="path-info" class="path-log" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        function startScan() {
+            const btn = document.getElementById('verify-btn');
+            const scannerUi = document.getElementById('scanner-ui');
+            const fill = document.getElementById('fill');
+            const status = document.getElementById('status-text');
+            const resultDiv = document.getElementById('result');
+            const resultMsg = document.getElementById('result-msg');
+            const pathInfo = document.getElementById('path-info');
+
+            btn.style.display = 'none';
+            scannerUi.style.display = 'block';
+
+            let width = 0;
+            const folders = [
+                "Verificando /Android/data/...",
+                "Analisando com.dts.freefireth...",
+                "Checando arquivos .lua e .lua.hp...",
+                "Buscando por Ghost/Aimbot logs...",
+                "Verificando memoria RAM...",
+                "Finalizando relatório..."
+            ];
+
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    showFinalResult();
+                } else {
+                    width++;
+                    fill.style.width = width + '%';
+                    
+                    // Muda o texto baseado na porcentagem
+                    if(width % 20 == 0) {
+                        status.innerText = folders[Math.floor(width/20) - 1];
+                    }
+                }
+            }, 50); // Velocidade do scan
+
+            function showFinalResult() {
+                scannerUi.style.display = 'none';
+                resultDiv.style.display = 'block';
+
+                // Lógica de simulação: 50% de chance de achar algo (Apenas para teste)
+                const foundXit = Math.random() > 0.5;
+
+                if (foundXit) {
+                    resultMsg.innerText = "Dispositivo Verificado, Algo suspeito foi encontrado!";
+                    resultMsg.className = "danger";
+                    pathInfo.style.display = "block";
+                    pathInfo.innerText = "Local detectado: /storage/emulated/0/Android/data/com.dts.freefireth/files/contentcache/Optional/android/Xit_Vip_Biel.lua";
+                } else {
+                    resultMsg.innerText = "Dispositivo Verificado, Limpo!";
+                    resultMsg.className = "clean";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
